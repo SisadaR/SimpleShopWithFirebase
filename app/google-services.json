@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "812281111699",
+    "project_id": "simpleshop-51620",
+    "storage_bucket": "simpleshop-51620.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:812281111699:android:cbcf9c2ebbe4697d751966",
+        "android_client_info": {
+          "package_name": "com.sisada.simpleshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "812281111699-fj0n7o9nng066rd2fm0gjbsse8qhaokr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sisada.simpleshop",
+            "certificate_hash": "92fe864dfa9ed42da861e5554638793ead56bf5a"
+          }
+        },
+        {
+          "client_id": "812281111699-epqa8nuvendr92bd7u1pvba512srpr8l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCadIqhykAuTOJDKzrCWLH0N4tguLT_4aY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "812281111699-epqa8nuvendr92bd7u1pvba512srpr8l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
