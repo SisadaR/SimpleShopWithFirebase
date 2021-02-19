@@ -13,4 +13,7 @@
     <color name="colorAccent">#8F45FA</color>
     <color name="colorPrimaryText">#FFFFFF</color>
     <color name="colorSecondaryText">#BFBFBF</color>
+
+    <color name="colorSnackBarSuccess">#8BC34A</color>
+    <color name="colorSnackBarError">#F72400</color>
 </resources>
