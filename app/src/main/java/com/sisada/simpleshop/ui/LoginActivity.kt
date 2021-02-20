@@ -80,8 +80,14 @@ class LoginActivity : BaseActivity() {
 
     fun userLoggedInSuccess(user: User){
         hideProgressDialog()
-        startActivity(Intent(this,MainActivity::class.java))
+
+        if(user.profileCompleted == 0){
+            startActivity(Intent(this,UserProfileActivity::class.java))
+        }else{
+            startActivity(Intent(this,MainActivity::class.java))
+        }
         finish()
+
     }
 
     private fun goToMainActivity(){

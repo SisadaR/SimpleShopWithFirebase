@@ -53,7 +53,7 @@ class FireStoreClass {
                     Constants.SHOP_PREFERANCES,
                     Context.MODE_PRIVATE)
                 val editor = sharedPreferances.edit()
-                editor.putString(Constants.LOGGED_IN_USERNAME, "{${user.name}}")
+                editor.putString(Constants.LOGGED_IN_USERNAME, "{${user.firstName}}")
                 editor.apply()
 
                 when(activity){

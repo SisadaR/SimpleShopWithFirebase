@@ -58,7 +58,10 @@ class SignupActivity : BaseActivity() {
                             if(task.isSuccessful){
                                 val firebaseUser = task.result!!.user!!
 
-                                val user = User( firebaseUser.uid,name,email)
+                                val user = User(
+                                    id = firebaseUser.uid,
+                                    firstName = name,
+                                    email = email)
 
                                 FireStoreClass().registerUser(this,user)
 
@@ -86,6 +89,7 @@ class SignupActivity : BaseActivity() {
 
     fun userRegisterSuccess(){
         hideProgressDialog()
+        startActivity(Intent(this,MainActivity::class.java))
     }
 
     private fun setupActionBar(){
