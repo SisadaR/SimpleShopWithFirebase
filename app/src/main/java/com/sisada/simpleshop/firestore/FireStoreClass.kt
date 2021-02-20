@@ -1,6 +1,7 @@
 package com.sisada.simpleshop.firestore
 
 import android.app.Activity
+import android.content.Context
 import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -45,7 +46,16 @@ class FireStoreClass {
             .get()
             .addOnSuccessListener { document ->
                 Log.i(activity.javaClass.simpleName, document.toString())
+
                 val user = document.toObject(User::class.java)!!
+
+                val sharedPreferances = activity.getSharedPreferences(
+                    Constants.SHOP_PREFERANCES,
+                    Context.MODE_PRIVATE)
+                val editor = sharedPreferances.edit()
+                editor.putString(Constants.LOGGED_IN_USERNAME, "{${user.name}}")
+                editor.apply()
+
                 when(activity){
                     is LoginActivity -> {
                         activity.userLoggedInSuccess(user)
