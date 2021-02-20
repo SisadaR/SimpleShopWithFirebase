@@ -12,6 +12,8 @@ import com.google.firebase.ktx.Firebase
 import com.sisada.simpleshop.R
 import com.sisada.simpleshop.constants.IntentKey
 import com.sisada.simpleshop.databinding.ActivitySignupBinding
+import com.sisada.simpleshop.firestore.FireStoreClass
+import com.sisada.simpleshop.models.User
 import com.sisada.simpleshop.utils.Validator
 
 class SignupActivity : BaseActivity() {
@@ -41,9 +43,11 @@ class SignupActivity : BaseActivity() {
 
             if(validator.result()){
 
-                binding.layoutContent.visibility = View.INVISIBLE
-                binding.layoutLoading.visibility = View.VISIBLE
+//                binding.layoutContent.visibility = View.INVISIBLE
+//                binding.layoutLoading.visibility = View.VISIBLE
 
+                this.showProgressDialog("wait")
+                val name = binding.textinputName.editText?.text.toString()
                 val email = binding.textinputEmail.editText?.text.toString()
                 val password = binding.textinputEmail.editText?.text.toString()
 
@@ -53,17 +57,23 @@ class SignupActivity : BaseActivity() {
                         OnCompleteListener { task ->
                             if(task.isSuccessful){
                                 val firebaseUser = task.result!!.user!!
-                                Snackbar.make(binding.root,"Register successful",2)
 
-                                val intent = Intent(this, MainActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                intent.putExtra(IntentKey.EMAIL, email)
-                                intent.putExtra(IntentKey.USER_ID, firebaseUser.uid)
-                                startActivity(intent)
-                                finish()
+                                val user = User( firebaseUser.uid,name,email)
+
+                                FireStoreClass().registerUser(this,user)
+
+                                //Snackbar.make(binding.root,"Register successful",2)
+
+//                                val intent = Intent(this, MainActivity::class.java)
+//                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//                                intent.putExtra(IntentKey.EMAIL, email)
+//                                intent.putExtra(IntentKey.USER_ID, firebaseUser.uid)
+//                                startActivity(intent)
+//                                finish()
                             }else{
-                                binding.layoutContent.visibility = View.VISIBLE
-                                binding.layoutLoading.visibility = View.INVISIBLE
+//                                binding.layoutContent.visibility = View.VISIBLE
+//                                binding.layoutLoading.visibility = View.INVISIBLE
+                                hideProgressDialog()
                                 Snackbar.make(binding.root,"Register failed",5000).show()
                             }
 
@@ -72,6 +82,10 @@ class SignupActivity : BaseActivity() {
             }
 
         }
+    }
+
+    fun userRegisterSuccess(){
+        hideProgressDialog()
     }
 
     private fun setupActionBar(){

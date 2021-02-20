@@ -12,6 +12,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.sisada.simpleshop.constants.IntentKey
 import com.sisada.simpleshop.databinding.ActivityLoginBinding
+import com.sisada.simpleshop.firestore.FireStoreClass
+import com.sisada.simpleshop.models.User
 import com.sisada.simpleshop.utils.Validator
 
 class LoginActivity : BaseActivity() {
@@ -25,7 +27,7 @@ class LoginActivity : BaseActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
 
-        binding.layoutLoading.visibility = View.INVISIBLE
+        //binding.layoutLoading.visibility = View.INVISIBLE
 
         validator.addCheckEmail(binding.textinputEmail)
         validator.addCheckTooShort(binding.textinputPassword, 6)
@@ -45,20 +47,25 @@ class LoginActivity : BaseActivity() {
 
         binding.btnLogin.setOnClickListener {
 
+
             if(validator.result()){
                 //validate first
-                binding.layoutContent.visibility = View.INVISIBLE
-                binding.layoutLoading.visibility = View.VISIBLE
+//                binding.layoutContent.visibility = View.INVISIBLE
+//                binding.layoutLoading.visibility = View.VISIBLE
 
+                this.showProgressDialog("wait")
                 val email = binding.textinputEmail.editText?.text.toString()
                 val password = binding.textinputEmail.editText?.text.toString()
                 Firebase.auth.signInWithEmailAndPassword(email,password)
                     .addOnCompleteListener { task ->
+
+
                         if (task.isSuccessful) {
-                            goToMainActivity()
+                            FireStoreClass().getUserDetails(this)
                         } else{
-                            binding.layoutContent.visibility = View.VISIBLE
-                            binding.layoutLoading.visibility = View.INVISIBLE
+//                            binding.layoutContent.visibility = View.VISIBLE
+//                            binding.layoutLoading.visibility = View.INVISIBLE
+                            this.hideProgressDialog()
                             Snackbar.make(binding.root,task.exception.toString(),5000).show()
                         }
                     }
@@ -66,9 +73,15 @@ class LoginActivity : BaseActivity() {
 
         }
 
-        Firebase.auth.currentUser?.let {
-            goToMainActivity()
-        }
+//        Firebase.auth.currentUser?.let {
+//            goToMainActivity()
+//        }
+    }
+
+    fun userLoggedInSuccess(user: User){
+        hideProgressDialog()
+        startActivity(Intent(this,MainActivity::class.java))
+        finish()
     }
 
     private fun goToMainActivity(){
