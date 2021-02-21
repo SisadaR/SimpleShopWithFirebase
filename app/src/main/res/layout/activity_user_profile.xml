@@ -56,6 +56,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/user_image_background" />
+
                 <ImageView
                     android:id="@+id/iv_user_photo"
                     android:layout_width="match_parent"
@@ -66,10 +71,6 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_user_placeholder" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/user_image_background" />
             </FrameLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -92,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:padding="@dimen/et_padding"
-                    android:textColor="@color/colorPrimaryText"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/et_textSize" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -116,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:padding="@dimen/et_padding"
-                    android:textColor="@color/colorPrimaryText"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/et_textSize" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -140,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
                     android:padding="@dimen/et_padding"
-                    android:textColor="@color/colorPrimaryText"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/et_textSize" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -164,7 +165,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="phone"
                     android:padding="@dimen/et_padding"
-                    android:textColor="@color/colorPrimaryText"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/et_textSize" />
             </com.google.android.material.textfield.TextInputLayout>
 

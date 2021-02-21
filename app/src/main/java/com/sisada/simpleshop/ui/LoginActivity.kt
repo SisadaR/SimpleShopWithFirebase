@@ -14,6 +14,7 @@ import com.sisada.simpleshop.constants.IntentKey
 import com.sisada.simpleshop.databinding.ActivityLoginBinding
 import com.sisada.simpleshop.firestore.FireStoreClass
 import com.sisada.simpleshop.models.User
+import com.sisada.simpleshop.utils.Constants
 import com.sisada.simpleshop.utils.Validator
 
 class LoginActivity : BaseActivity() {
@@ -82,7 +83,9 @@ class LoginActivity : BaseActivity() {
         hideProgressDialog()
 
         if(user.profileCompleted == 0){
-            startActivity(Intent(this,UserProfileActivity::class.java))
+            val intent = Intent(this,UserProfileActivity::class.java)
+            intent.putExtra(Constants.EXTRA_USER_DETAILS, user)
+            startActivity(intent)
         }else{
             startActivity(Intent(this,MainActivity::class.java))
         }
