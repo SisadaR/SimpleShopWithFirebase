@@ -15,6 +15,7 @@ import com.sisada.simpleshop.R
 import com.sisada.simpleshop.databinding.ActivityUserProfileBinding
 import com.sisada.simpleshop.models.User
 import com.sisada.simpleshop.utils.Constants
+import com.sisada.simpleshop.utils.GlideLoader
 import java.io.IOException
 
 class UserProfileActivity : BaseActivity(), View.OnClickListener {
@@ -76,7 +77,8 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
                     try{
 
                         val selectedImageFileUri = data.data!!
-                        binding.ivUserPhoto.setImageURI(Uri.parse(selectedImageFileUri.toString()))
+                        //binding.ivUserPhoto.setImageURI(Uri.parse(selectedImageFileUri.toString()))
+                        GlideLoader(this).loadUserPicture(selectedImageFileUri,binding.ivUserPhoto)
 
                     } catch (e:IOException){
                         e.printStackTrace()
