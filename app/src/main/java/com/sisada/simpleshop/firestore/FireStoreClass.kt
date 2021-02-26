@@ -2,15 +2,19 @@ package com.sisada.simpleshop.firestore
 
 import android.app.Activity
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.sisada.simpleshop.models.User
 import com.sisada.simpleshop.ui.BaseActivity
 import com.sisada.simpleshop.ui.LoginActivity
 import com.sisada.simpleshop.ui.SignupActivity
+import com.sisada.simpleshop.ui.UserProfileActivity
 import com.sisada.simpleshop.utils.Constants
 
 class FireStoreClass {
@@ -27,6 +31,28 @@ class FireStoreClass {
                 activity.hideProgressDialog()
                 Log.e(activity.javaClass.simpleName, "Error while register user",e)
             }
+    }
+
+    fun updateUserProfileDate(activity: Activity,userHashMap: HashMap<String,Any>){
+        mFireStore.collection(Constants.USER)
+            .document(getCurrentUserID())
+            .update(userHashMap)
+            .addOnSuccessListener{
+                when(activity){
+                    is UserProfileActivity ->{
+                        activity.userProfileUpdateSuccess()
+                    }
+                }
+            }
+            .addOnFailureListener{ e ->
+                when(activity){
+                    is UserProfileActivity ->{
+                        activity.hideProgressDialog()
+                    }
+                }
+                Log.e(activity.javaClass.simpleName, "error while update profile", e)
+            }
+
     }
 
     fun getCurrentUserID():String{
@@ -64,6 +90,37 @@ class FireStoreClass {
             }
             .addOnFailureListener {
 
+            }
+    }
+
+    fun uploadImageToCloudStorage(activity: Activity, imageFireURI: Uri?){
+
+        val sRef: StorageReference = FirebaseStorage.getInstance().reference.child(
+            Constants.USER_PROFILE_IMAGE
+                    + System.currentTimeMillis()
+                    + "."
+                    + Constants.getFileExtension(activity,imageFireURI)
+        )
+
+        sRef.putFile(imageFireURI!!)
+            .addOnSuccessListener { taskSnapshot ->
+
+                taskSnapshot.metadata!!.reference!!.downloadUrl
+                    .addOnSuccessListener { uri ->
+
+                        when(activity){
+                            is UserProfileActivity ->{
+                                activity.imageUploadSuccess(uri.toString())
+                            }
+                        }
+                    }
+            }
+            .addOnFailureListener{exception ->
+                when(activity){
+                    is UserProfileActivity ->{
+                        activity.hideProgressDialog()
+                    }
+                }
             }
     }
 }

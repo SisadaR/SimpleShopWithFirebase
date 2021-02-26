@@ -5,27 +5,30 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.sisada.simpleshop.R
 import com.sisada.simpleshop.databinding.ActivityUserProfileBinding
+import com.sisada.simpleshop.firestore.FireStoreClass
 import com.sisada.simpleshop.models.User
 import com.sisada.simpleshop.utils.Constants
 import com.sisada.simpleshop.utils.GlideLoader
+import com.sisada.simpleshop.utils.Validator
 import java.io.IOException
 
 class UserProfileActivity : BaseActivity(), View.OnClickListener {
     private val binding by lazy { ActivityUserProfileBinding.inflate(layoutInflater) }
-
+    private val validator = Validator()
+    private lateinit var userDetails:User
+    private var mSelectedImageFileUri:Uri? = null
+    private var mUserProfileImageURL:String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        var userDetails = User()
+        userDetails = User()
 
         if(intent.hasExtra(Constants.EXTRA_USER_DETAILS)){
             userDetails =  intent.getParcelableExtra<User>(Constants.EXTRA_USER_DETAILS)!!
@@ -36,6 +39,11 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
         binding.etEmail.isEnabled = false
         binding.etEmail.setText(userDetails.email)
         binding.ivUserPhoto.setOnClickListener(this)
+
+        validator.addCheckEmpty(binding.tilLastName)
+        validator.addCheckEmpty(binding.tilMobileNumber)
+
+        binding.buttonUpdateprofile.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -49,9 +57,39 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
                         Constants.READ_STORAGE_PERMISSION_CODE
                     )
                 }
+            }
 
+            binding.buttonUpdateprofile -> {
+                    showProgressDialog("")
+                    if(mSelectedImageFileUri != null){
+                        FireStoreClass().uploadImageToCloudStorage(this,mSelectedImageFileUri)
+                    } else {
+                        updateUserProfileDetail()
+                    }
             }
         }
+    }
+
+    private fun updateUserProfileDetail(){
+
+        val userHashMap = HashMap<String,Any>()
+        val mobileNumber = binding.etMobileNumber.text.toString()
+        val gender = if(binding.radioButton.isChecked) Constants.MALE else Constants.FEMALE
+
+        userHashMap[Constants.MOBILE] = mobileNumber.toLong()
+        userHashMap[Constants.GENDER] = gender
+
+        if(mUserProfileImageURL.isNotEmpty())
+            userHashMap[Constants.IMAGE] = mUserProfileImageURL
+
+        FireStoreClass().updateUserProfileDate(this,userHashMap)
+    }
+
+    fun userProfileUpdateSuccess(){
+        hideProgressDialog()
+
+        startActivity(Intent(this,MainActivity::class.java))
+        finish()
     }
 
     override fun onRequestPermissionsResult(
@@ -75,11 +113,9 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
             if (requestCode == Constants.PICK_IMAGE_REQUEST_CODE){
                 if(data != null){
                     try{
-
-                        val selectedImageFileUri = data.data!!
+                        mSelectedImageFileUri = data.data!!
                         //binding.ivUserPhoto.setImageURI(Uri.parse(selectedImageFileUri.toString()))
-                        GlideLoader(this).loadUserPicture(selectedImageFileUri,binding.ivUserPhoto)
-
+                        GlideLoader(this).loadUserPicture(mSelectedImageFileUri!!,binding.ivUserPhoto)
                     } catch (e:IOException){
                         e.printStackTrace()
                         Toast.makeText(this,"load image failed",Toast.LENGTH_LONG).show()
@@ -87,5 +123,11 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
                 }
             }
         }
+    }
+
+    fun imageUploadSuccess(imageURL:String){
+        //hideProgressDialog()
+        mUserProfileImageURL = imageURL
+        updateUserProfileDetail()
     }
 }
