@@ -8,6 +8,7 @@ import android.webkit.MimeTypeMap
 import com.sisada.simpleshop.ui.MainActivity
 
 object Constants {
+    const val LASTNAME: String = "lastName"
     const val USER:String = "user"
     const val SHOP_PREFERANCES: String = "shop_prefs"
     const val LOGGED_IN_USERNAME: String = "logged_in_username"
@@ -20,6 +21,8 @@ object Constants {
     const val GENDER: String = "gender"
     const val IMAGE: String = "image"
     const val USER_PROFILE_IMAGE:String = "user_profile_image"
+    const val COMPLETE_PROFILE: String = "profileCompleted"
+
 
 
     fun showImageChooser(activity: Activity){

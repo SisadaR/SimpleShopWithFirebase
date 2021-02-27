@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.sisada.simpleshop.databinding.ActivityUserProfileBinding
 import com.sisada.simpleshop.firestore.FireStoreClass
 import com.sisada.simpleshop.models.User
@@ -36,14 +37,20 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
 
         binding.etFirstName.isEnabled = false
         binding.etFirstName.setText(userDetails.firstName)
+        binding.etLastName.setText(userDetails.lastName)
+        binding.etMobileNumber.setText(userDetails.mobile.toString())
+
         binding.etEmail.isEnabled = false
         binding.etEmail.setText(userDetails.email)
         binding.ivUserPhoto.setOnClickListener(this)
 
         validator.addCheckEmpty(binding.tilLastName)
         validator.addCheckEmpty(binding.tilMobileNumber)
-
         binding.buttonUpdateprofile.setOnClickListener(this)
+
+        if(userDetails.image != null){
+            GlideLoader(this).loadUserPicture( Uri.parse(userDetails.image),binding.ivUserPhoto)
+        }
     }
 
     override fun onClick(v: View?) {
@@ -74,10 +81,13 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
 
         val userHashMap = HashMap<String,Any>()
         val mobileNumber = binding.etMobileNumber.text.toString()
+        val lastname = binding.etLastName.text.toString()
         val gender = if(binding.radioButton.isChecked) Constants.MALE else Constants.FEMALE
 
         userHashMap[Constants.MOBILE] = mobileNumber.toLong()
         userHashMap[Constants.GENDER] = gender
+        userHashMap[Constants.LASTNAME] = lastname
+        userHashMap[Constants.COMPLETE_PROFILE] = 1
 
         if(mUserProfileImageURL.isNotEmpty())
             userHashMap[Constants.IMAGE] = mUserProfileImageURL
