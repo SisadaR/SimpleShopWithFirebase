@@ -2,7 +2,11 @@ package com.sisada.simpleshop.ui
 
 
 import android.app.Dialog
+import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
@@ -11,7 +15,7 @@ import org.w3c.dom.Text
 
 open class BaseActivity : AppCompatActivity() {
 
-
+    private var doubleBackToExitPressedOnce = false
     private lateinit var mProgressDialog: Dialog
 
     fun showErrorSnackBar(message: String, errorMessage: Boolean) {
@@ -54,5 +58,20 @@ open class BaseActivity : AppCompatActivity() {
 
     fun hideProgressDialog() {
         mProgressDialog.dismiss()
+    }
+
+    fun doubleBackExit(){
+        if(doubleBackToExitPressedOnce){
+            super.onBackPressed()
+            return
+        }
+
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(this,"Please Click Back Again To Exit", Toast.LENGTH_SHORT).show()
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            this.doubleBackToExitPressedOnce = false
+        }, 1000)
+
     }
 }
